@@ -66,6 +66,7 @@ class TPLEIADESDetChan : public TGo4EventElement
         #ifdef TPLEIADES_FILL_TRACES
         std::vector<Double_t>   fDTrace;
         std::vector<Double_t>   fDTraceBLR;
+        Double_t fDBaselineVal;
         Int_t fDBIBOXEnergy;
         std::vector<Double_t>   fDBIBOXTrace;
         Int_t fDMWDEnergy;
@@ -78,6 +79,7 @@ class TPLEIADESDetChan : public TGo4EventElement
         TString fDetType;       // detector type
         TString fChanType;      // type of channel
         UInt_t fUniqChanMap;    // channel map to DAQ position
+        UInt_t fSFP;            // sfp number
 
     ClassDef(TPLEIADESDetChan, 1)
 };

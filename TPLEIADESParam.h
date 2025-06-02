@@ -46,8 +46,8 @@ class TPLEIADESParam : public TGo4Parameter
         std::map<TString, TString> fDetTypeMap; // a map of names to detector types
         std::map<TString, UInt_t> fpSideMap;    // a map of names to Si Pad p-side positions
         std::map<TString, UInt_t> fnSideMap;    // a map of names to Si Pad n-side positions
-        UInt_t fDSSDMap[4];                     // a list of DSSD channel positions
-        UInt_t fCrystalMap[2];                  // a list of Crystal channel positions
+        std::map<TString, UInt_t> fDSSDMap[4];                  // a list of DSSD channel positions
+        std::map<TString, UInt_t> fCrystalMap[2];               // a list of Crystal channel positions
 
         // parameter for trace size
         UInt_t fTraceSize = 0;

@@ -53,6 +53,7 @@ class TPLEIADESFebChannel : public TGo4EventElement
         #ifdef TPLEIADES_FILL_TRACES
         std::vector<Double_t>   fRTrace;
         std::vector<Double_t>   fRTraceBLR;
+        Double_t fRBaselineVal;
         Int_t fRBIBOXEnergy;
         std::vector<Double_t>   fRBIBOXTrace;
         Int_t fRMWDEnergy;

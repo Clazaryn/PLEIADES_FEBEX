@@ -51,6 +51,7 @@ void TPLEIADESDetChan::Clear(Option_t *opt)
     #ifdef TPLEIADES_FILL_TRACES
     fDTrace.clear();
     fDTraceBLR.clear();
+    fDBaselineVal = 0;
     fDBIBOXEnergy = 0;
     fDBIBOXTrace.clear();
     fDMWDEnergy = 0;
@@ -141,32 +142,56 @@ void TPLEIADESDetector::SetupDetector()    // builds detector channels based on 
     {
         // setup raw DSSD channels
         TString dssdNames[4] = {"FrntLft", "FrntRgt", "BackTop", "BackBot"};
-        for(int j=0; j<4; ++j)
-        {
+        /*UInt_t sfp = 10;
+        if( strcmp(fDetName.Data(), "slot2_DSSD_SFP0") == 0 ){
+            sfp = 0;
+        }
+        else if( strcmp(fDetName.Data(), "slot2_DSSD_SFP1") == 0 ){
+            sfp = 1;
+        }
+        else {
+            TGo4Log::Warn("DSSD detector name %s not recognised during detector setup.", fDetName.Data());
+        }*/
+        //if(0 == sfp || 1 == sfp){
+        for(int j=0; j<4; ++j) {
             modname.Form("%s_%s", fDetName.Data(), dssdNames[j].Data());
             TPLEIADESDetChan *dssdChan = new TPLEIADESDetChan(modname.Data(), j);
             dssdChan->SetDetName(fDetName.Data());
             dssdChan->SetDetId(getId());
             dssdChan->SetDetType(fDetType.Data());
-            dssdChan->SetChanMap(fParDet->fDSSDMap[j]);
+            dssdChan->SetChanMap(fParDet->fDSSDMap[fDetName][j]);
             dssdChan->SetChanType("dssdChan");
             addEventElement(dssdChan);
+            std::cout << "SETUP DETECTOR: " << modname << std::endl;
+        //}
         }
     }
     else if(fDetType == "Crystal")  // setup the Crystal
     {
         // setup Crystal photodiode outputs
         TString crysNames[2] = {"CrysFrnt", "CrysBack"};
-        for(int j=0; j<2; ++j)
-        {
+        /*UInt_t sfp = 10;
+        if( strcmp(fDetName.Data(), "slotBP_Crys_SFP0") == 0 ){
+            sfp = 0;
+        }
+        else if( strcmp(fDetName.Data(), "slotBP_Crys_SFP1") == 0 ){
+            sfp = 1;
+        }
+        else {
+            TGo4Log::Warn("Crystal detector name %s not recognised.", fDetName.Data());
+        }
+        if(0 == sfp || 1 == sfp){*/
+        for(int j=0; j<2; ++j) {
             modname.Form("%s_%s", fDetName.Data(), crysNames[j].Data());
             TPLEIADESDetChan *crysChan = new TPLEIADESDetChan(modname.Data(), j);
             crysChan->SetDetName(fDetName.Data());
             crysChan->SetDetId(getId());
             crysChan->SetDetType(fDetType.Data());
-            crysChan->SetChanMap(fParDet->fCrystalMap[j]);
+            crysChan->SetChanMap(fParDet->fCrystalMap[fDetName][j]);
             crysChan->SetChanType("crysChan");
             addEventElement(crysChan);
+            std::cout << "SETUP DETECTOR: " << modname << std::endl;
+            //}
         }
     }
     else

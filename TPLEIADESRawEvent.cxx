@@ -49,6 +49,7 @@ void TPLEIADESFebChannel::Clear(Option_t *opt)
     #ifdef TPLEIADES_FILL_TRACES
     fRTrace.clear();
     fRTraceBLR.clear();
+    fRBaselineVal = 0;
     fRBIBOXEnergy = 0;
     fRBIBOXTrace.clear();
     fRMWDEnergy = 0;

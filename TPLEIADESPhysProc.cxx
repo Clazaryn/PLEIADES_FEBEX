@@ -121,6 +121,7 @@ Bool_t TPLEIADESPhysProc::BuildEvent(TGo4EventElement* target)
                 {
                     detPhysics->fpFPGAEnergy = theDetector->GetChannel(hitLoc[0])->fDFPGAEnergy;
                     #ifdef TPLEIADES_FILL_TRACES
+                    detPhysics->fpBaselineVal = theDetector->GetChannel(hitLoc[0])->fDBaselineVal;
                     #ifdef BIBOX
                     detPhysics->fpBIBOXEnergy = theDetector->GetChannel(hitLoc[0])->fDBIBOXEnergy;
                     #endif // BIBOX
@@ -151,6 +152,7 @@ Bool_t TPLEIADESPhysProc::BuildEvent(TGo4EventElement* target)
                 {
                     detPhysics->fnFPGAEnergy = theDetector->GetChannel(7)->fDFPGAEnergy;
                     #ifdef TPLEIADES_FILL_TRACES
+                    detPhysics->fnBaselineVal = theDetector->GetChannel(7)->fDBaselineVal;
                     #ifdef BIBOX
                     detPhysics->fnBIBOXEnergy = theDetector->GetChannel(7)->fDBIBOXEnergy;
                     #endif // BIBOX
@@ -219,6 +221,8 @@ Bool_t TPLEIADESPhysProc::BuildEvent(TGo4EventElement* target)
 
                 #ifdef TPLEIADES_FILL_TRACES
                 // load the 2 crystal channels from the Raw Event input
+                detPhysics->fpBaselineVal = theDetector->GetChannel(0)->fDBaselineVal;
+                detPhysics->fnBaselineVal = theDetector->GetChannel(1)->fDBaselineVal;
                 #ifdef BIBOX
                 detPhysics->fpBIBOXEnergy = theDetector->GetChannel(0)->fDBIBOXEnergy;
                 detPhysics->fnBIBOXEnergy = theDetector->GetChannel(1)->fDBIBOXEnergy;

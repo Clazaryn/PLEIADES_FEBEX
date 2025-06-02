@@ -202,6 +202,7 @@ Bool_t TPLEIADESRawProc::BuildEvent(TGo4EventElement* target)
     l_mwd_tau[1][2][1] = 1572.50;     l_mwd_tau[1][2][2] = 1565.66;     l_mwd_tau[1][3][1] = 1570.41;     l_mwd_tau[1][3][2]  = 1567.77;
     l_mwd_tau[1][4][0] = 1101.10;     l_mwd_tau[1][4][1] = 1109.53;     l_mwd_tau[1][4][2] = 1117.12;     l_mwd_tau[1][4][3]  = 1111.86;
     l_mwd_tau[1][4][4] = 1115.77;     l_mwd_tau[1][4][5] = 1111.08;     l_mwd_tau[1][4][12] = 2458.66;    l_mwd_tau[1][4][13] = 2484.18;
+    l_mwd_tau[1][4][14] = 1112.90;    l_mwd_tau[1][4][15] = 1106.67;
 
     Int_t       l_diff_sum = 0;
     Int_t       l_dint_sum = 0;
@@ -905,6 +906,8 @@ Bool_t TPLEIADESRawProc::BuildEvent(TGo4EventElement* target)
                         l_value=h_trace_blr[l_i][l_j][l_k]->GetBinContent(bin);
                         theChannel->fRTraceBLR.push_back(l_value);
                     }
+
+                    theChannel->fRBaselineVal = f_bls_val;
 
                     #ifdef BIBOX
                     for(int bin=1; bin<=h_bibox_f[l_i][l_j][l_k]->GetNbinsX(); ++bin)

@@ -102,6 +102,7 @@ Bool_t TPLEIADESDetProc::BuildEvent(TGo4EventElement* target)
     fOutEvent->SetValid(isValid);
 
     isValid = kTRUE;    // input/output events look good
+    UInt_t sfp = 99;
 
     // loop over detectors to fill data from raw output using mapping
     for(const TString& dname : fPar->fDetNameVec)
@@ -118,7 +119,7 @@ Bool_t TPLEIADESDetProc::BuildEvent(TGo4EventElement* target)
         {
             if((theDetector->getNElements()) != 8)
             {
-                TGo4Log::Warn("Detector %s is a Si Pad but does not have 8 elements. Detector is setup incorrectly.", dname.Data());
+                TGo4Log::Warn("Detector %s is a Si Pad but does not have 8 elements (actually has %i elements). Detector is setup incorrectly.", dname.Data(), (theDetector->getNElements()));
                 return kFALSE;
             }
 
@@ -151,6 +152,7 @@ Bool_t TPLEIADESDetProc::BuildEvent(TGo4EventElement* target)
                 #ifdef TPLEIADES_FILL_TRACES
                 theDetChan->fDTrace           = theRawChan->fRTrace;
                 theDetChan->fDTraceBLR        = theRawChan->fRTraceBLR;
+                theDetChan->fDBaselineVal      = theRawChan->fRBaselineVal;
 
                 #ifdef BIBOX
                 theDetChan->fDBIBOXEnergy    = theRawChan->fRBIBOXEnergy;
@@ -188,12 +190,13 @@ Bool_t TPLEIADESDetProc::BuildEvent(TGo4EventElement* target)
             // load energy information
             theDetChan->fDFPGAEnergy      = theRawChan->fRFPGAEnergy;
             theDetChan->fDFPGAHitTime     = theRawChan->fRFPGAHitTime;
-            theDetChan->fDFPGABIBOX      = theRawChan->fRFPGABIBOX;
+            theDetChan->fDFPGABIBOX       = theRawChan->fRFPGABIBOX;
 
             // load trace information
             #ifdef TPLEIADES_FILL_TRACES
             theDetChan->fDTrace           = theRawChan->fRTrace;
             theDetChan->fDTraceBLR        = theRawChan->fRTraceBLR;
+            theDetChan->fDBaselineVal      = theRawChan->fRBaselineVal;
 
             #ifdef BIBOX
             theDetChan->fDBIBOXEnergy    = theRawChan->fRBIBOXEnergy;
@@ -214,15 +217,31 @@ Bool_t TPLEIADESDetProc::BuildEvent(TGo4EventElement* target)
         {
             if((theDetector->getNElements()) != 4)
             {
-                TGo4Log::Warn("Detector %s is a DSSD but does not have 6 elements. Detector is setup incorrectly.", dname.Data());
+                TGo4Log::Warn("Detector %s is a DSSD but does not have 4 elements (actually has %i elements). Detector is setup incorrectly.", dname.Data(), (theDetector->getNElements()));
                 return kFALSE;
             }
 
             // load the 4 DSSD channels from the Raw Event input
+            //UInt_t sfp = 10;
+            /*sfp = 99;
+            if("slot2_DSSD_SFP0" == dname){
+                sfp = 0;
+            }
+            else if("slot2_DSSD_SFP1" == dname){
+                sfp = 1;
+            }
+            else {
+                TGo4Log::Warn("DSSD detector name %s not recognised during detector processing.", dname.Data());
+                return kFALSE;
+            }*/
             for(int j=0; j<4; ++j)
             {
+                /*if(0 != sfp && 1 != sfp) {
+                    TGo4Log::Warn("Invalid SFP number %i when reading DSSD data", sfp);
+                    return kFALSE;
+                }*/
                 // det board is called inside for loop in case different channels are plugged into differnet MSI-8s
-                UInt_t dBoardID = (fPar->fDSSDMap[j] >> 4);               // bitwise shift to just select board location
+                UInt_t dBoardID = (fPar->fDSSDMap[dname][j] >> 4);               // bitwise shift to just select board location
                 TPLEIADESFebBoard *dBoard = RawEvent->GetBoard(dBoardID);   // get board from input event with board location
 
                 TPLEIADESDetChan *theDetChan = theDetector->GetChannel(j);
@@ -241,12 +260,13 @@ Bool_t TPLEIADESDetProc::BuildEvent(TGo4EventElement* target)
                 // load energy information
                 theDetChan->fDFPGAEnergy      = theRawChan->fRFPGAEnergy;
                 theDetChan->fDFPGAHitTime     = theRawChan->fRFPGAHitTime;
-                theDetChan->fDFPGABIBOX      = theRawChan->fRFPGABIBOX;
+                theDetChan->fDFPGABIBOX       = theRawChan->fRFPGABIBOX;
 
                 // load trace information
                 #ifdef TPLEIADES_FILL_TRACES
                 theDetChan->fDTrace           = theRawChan->fRTrace;
                 theDetChan->fDTraceBLR        = theRawChan->fRTraceBLR;
+                theDetChan->fDBaselineVal      = theRawChan->fRBaselineVal;
 
                 #ifdef BIBOX
                 //theDetChan->fDBIBOXEnergy    = theRawChan->fRBIBOXEnergy;
@@ -271,15 +291,31 @@ Bool_t TPLEIADESDetProc::BuildEvent(TGo4EventElement* target)
         {
             if((theDetector->getNElements()) != 2)
             {
-                TGo4Log::Warn("Detector %s is a Crystal but does not have 2 elements. Detector is setup incorrectly.", dname.Data());
+                TGo4Log::Warn("Detector %s is a Crystal but does not have 2 elements (actually has %i elements). Detector is setup incorrectly.", dname.Data(), (theDetector->getNElements()));
                 return kFALSE;
             }
 
             // load the 2 crystal channels from the Raw Event input
+            //UInt_t sfp = 10;
+            /*sfp = 99;
+            if("slotBP_Crys_SFP0" == dname){
+                sfp = 0;
+            }
+            else if("slotBP_Crys_SFP1" == dname){
+                sfp = 1;
+            }
+            else {
+                TGo4Log::Warn("Crystal detector name %s not recognised.", dname.Data());
+                return kFALSE;*/
+            }
             for(int j=0; j<2; ++j)
             {
+/*                if(0 != sfp && 1 != sfp) {
+                    TGo4Log::Warn("Invalid SFP number %i when reading crystal data", sfp);
+                    return kFALSE;
+                }*/
                 // det board is called inside for loop in case different channels are plugged into differnet MSI-8s
-                UInt_t cBoardID = (fPar->fCrystalMap[j] >> 4);               // bitwise shift to just select board location
+                UInt_t cBoardID = (fPar->fCrystalMap[dname][j] >> 4);               // bitwise shift to just select board location
                 TPLEIADESFebBoard *cBoard = RawEvent->GetBoard(cBoardID);   // get board from input event with board location
 
                 TPLEIADESDetChan *theDetChan = theDetector->GetChannel(j);
@@ -298,12 +334,13 @@ Bool_t TPLEIADESDetProc::BuildEvent(TGo4EventElement* target)
                 // load energy information
                 theDetChan->fDFPGAEnergy      = theRawChan->fRFPGAEnergy;
                 theDetChan->fDFPGAHitTime     = theRawChan->fRFPGAHitTime;
-                theDetChan->fDFPGABIBOX      = theRawChan->fRFPGABIBOX;
+                theDetChan->fDFPGABIBOX       = theRawChan->fRFPGABIBOX;
 
                 // load trace information
                 #ifdef TPLEIADES_FILL_TRACES
                 theDetChan->fDTrace           = theRawChan->fRTrace;
                 theDetChan->fDTraceBLR        = theRawChan->fRTraceBLR;
+                theDetChan->fDBaselineVal      = theRawChan->fRBaselineVal;
 
                 #ifdef BIBOX
                 theDetChan->fDBIBOXEnergy    = theRawChan->fRBIBOXEnergy;

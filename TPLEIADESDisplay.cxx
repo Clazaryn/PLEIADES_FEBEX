@@ -98,7 +98,7 @@ void TPLEIADESDetDisplay::InitDisplay()
     // make channel hit pattern histogram
     detname = fDetector->GetDetName();
 
-    std::cout << "This detector name is" << fDetector->GetDetName().Data() << std::endl;
+    std::cout << "This detector name is " << fDetector->GetDetName().Data() << std::endl;
 
     if(fDetector->GetDetType() == "SiPad")
     {
@@ -110,23 +110,31 @@ void TPLEIADESDetDisplay::InitDisplay()
         for(short i=0; i<7; ++i) { modname.Form("p-strip %d", i); hDetHitPattern->GetXaxis()->SetBinLabel(i+2, modname.Data()); }
         hDetHitPattern->GetXaxis()->SetBinLabel(9, "n-side");
 
+        std::cout << "Creating histogram: " << modhead << std::endl;
+
         modname.Form("TPLEIADESDetProc/%s/%s Energy Pattern", detname.Data(), detname.Data());
         modhead.Form("%s Energy Pattern", detname.Data());
         hDetEnergyPattern = MakeTH2('D', modname, modhead, 8, -0.5, 7.5, 1e3, 0, 1500);
         for(short i=0; i<7; ++i) { modname.Form("p-strip %d", i); hDetEnergyPattern->GetXaxis()->SetBinLabel(i+1, modname.Data()); }
         hDetEnergyPattern->GetXaxis()->SetBinLabel(8, "n-side");
+
+        std::cout << "Creating histogram: " << modhead << std::endl;
     }
     else if(fDetector->GetDetType() == "DSSD")
     {
         modname.Form("TPLEIADESDetProc/%s/%s Hit Pattern", detname.Data(), detname.Data());
         modhead.Form("%s Hit Pattern", detname.Data());
         hDetHitPattern = MakeTH1('D', modname, modhead, 5, -1.5, 3.5);
+
+        std::cout << "Creating histogram: " << modhead << std::endl;
     }
     else if(fDetector->GetDetType() == "Crystal")
     {
         modname.Form("TPLEIADESDetProc/%s/%s Hit Pattern", detname.Data(), detname.Data());
         modhead.Form("%s Hit Pattern", detname.Data());
         hDetHitPattern = MakeTH1('D', modname, modhead, 3, -1.5, 1.5);
+
+        std::cout << "Creating histogram: " << modhead << std::endl;
     }
     else
     {
